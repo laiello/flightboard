@@ -1,10 +1,3 @@
-/**
- * Javascript plugins for our board.
- * 
- * @author Nick Goris
- * @version $id$
- */
-
 (function($){
 	// get
 	parseFlights();
@@ -17,9 +10,7 @@
 	}
 	
 	function parseFlights() {
-		// The returned data: Schiphol departures of today.
-		// The kind people of Schiphol return this in JSON, so it will be easy to parse.
-		var url = "departures.php";
+		var url = "flightdata.php";
 	
 		ajaxSetup();
 	
@@ -38,7 +29,7 @@
 				 * "status":"Departed",
 				 * "carrier":"Corendon Airlines"
 				 */
-				var table = $('#departures > tbody:last'); // our table
+				var table = $('#flights > tbody:last'); // our table
 				var json = response; // our response
 				var time = json.time // the time of update
 				var flights = json.data.flights; // all of the flights
@@ -58,7 +49,7 @@
 						if (row && row.length > 0) {
 							$('td.status', row).html(flight.status);						
 						} else {
-							var rowClass = ($('#departures > tbody:last tr:last').hasClass('even')) ? 'odd' : 'even';
+							var rowClass = ($('#flights > tbody:last tr:last').hasClass('even')) ? 'odd' : 'even';
 							var str = '<tr id="flight' + i + '" class="' + rowClass + '">';
 	
 							str += createCell('scheduled', flight.scheduled);
