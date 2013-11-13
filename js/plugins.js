@@ -1,5 +1,4 @@
 (function($){
-	// get
 	parseFlights();
 	setInterval(parseFlights, 30000);
 	
@@ -19,57 +18,29 @@
 			dataType: 'json',
 			url: url,
 			success: function(response) {
-				/* JSON:
-				 * "pFlightnumber":"CAI0804",
-				 * "sFlightnumber":"CAI804",
-				 * "prefix":"CAI",
-				 * "suffix":"0804",
-				 * "airport":"Antalya",
-				 * "scheduled":"04:00",
-				 * "status":"Departed",
-				 * "carrier":"Corendon Airlines"
-				 */
-				var table = $('#flights > tbody:last'); // our table
-				var json = response; // our response
-				var time = json.time // the time of update
-				var flights = json.data.flights; // all of the flights
-				var j = 0; // our custom counter
-				
-				// create new time
-				var timeSplit = time.split(':');
-				var minutes = (timeSplit[1] < 30) ? "00" : "30";
-				var flightTime = timeSplit[0] + ":" + minutes;
+				var table = $('#flights > tbody:last');
+				var flights = response;
 				
 				for (var i = 0; i < flights.length; i += 1) {
-					var flight = flights[i]; // our flight
-					// check if object exists
+					var flight = flights[i];
+					console.log(flight);
 					var row = $('#flight' + i, table);
 				
-					if (flight.scheduled >= flightTime) { // if it's passed, don't show it					
-						if (row && row.length > 0) {
-							$('td.status', row).html(flight.status);						
-						} else {
-							var rowClass = ($('#flights > tbody:last tr:last').hasClass('even')) ? 'odd' : 'even';
-							var str = '<tr id="flight' + i + '" class="' + rowClass + '">';
-	
-							str += createCell('scheduled', flight.scheduled);
-							str += createCell('airport', flight.airport);
-							str += createCell('flightnumber', flight.prefix + ' ' + flight.suffix);
-							str += createCell('carrier', flight.carrier);
-							str += createCell('status', flight.status);
-	
-							str += '</tr>';								
-							table.append(str);
-							
-						}
-												
-						j += 1; // add one
-						//if (j > 20) break; // stop after a 100
+					if (row && row.length > 0) {
+						$('td.status', row).html(flight.status);						
 					} else {
-						if (row && row.length > 0) {
-							row.remove();
-						}	
-					}			
+						var rowClass = ($('#flights > tbody:last tr:last').hasClass('even')) ? 'odd' : 'even';
+						var str = '<tr id="flight' + i + '" class="' + rowClass + '">';
+
+						str += createCell('scheduled', flight.est_time);
+						str += createCell('airport', flight.airport);
+						str += createCell('flightnumber', flight.carrier + ' ' + flight.flightnumber);
+						str += createCell('carrier', flight.carrier);
+						str += createCell('status', flight.status);
+
+						str += '</tr>';								
+						table.append(str);
+					}
 				}
 			}
 		});
