@@ -20,22 +20,29 @@
 			success: function(response) {
 				var table = $('#flights > tbody:last');
 				var flights = response;
-				
+
 				for (var i = 0; i < flights.length; i += 1) {
 					var flight = flights[i];
 					console.log(flight);
-					var row = $('#flight' + i, table);
+					var row = $('#flight' + flight.carrier + flight.flightnumber, table);
 				
 					if (row && row.length > 0) {
 						$('td.status', row).html(flight.status);						
 					} else {
 						var rowClass = ($('#flights > tbody:last tr:last').hasClass('even')) ? 'odd' : 'even';
-						var str = '<tr id="flight' + i + '" class="' + rowClass + '">';
+						var str = '<tr id="flight' + flight.carrier + flight.flightnumber + '" class="' + rowClass + '">';
 
-						str += createCell('scheduled', flight.est_time);
+						str += createCell('carrier', flight.carrier);
 						str += createCell('airport', flight.airport);
 						str += createCell('flightnumber', flight.carrier + ' ' + flight.flightnumber);
-						str += createCell('carrier', flight.carrier);
+						str += createCell('scheduled', flight.est_time);
+						if(flight.act_time == "00:00")
+						{
+							act_time = flight.est_time;
+						}else{
+							act_time = flight.act_time;
+						}
+						str += createCell('actual', act_time);
 						str += createCell('status', flight.status);
 
 						str += '</tr>';								
